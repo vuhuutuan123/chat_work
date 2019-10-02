@@ -10,16 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_02_075859) do
+ActiveRecord::Schema.define(version: 2019_10_02_093208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "friend_requests", force: :cascade do |t|
-    t.integer "sender_id"
-    t.integer "receiver_id"
+    t.bigint "user_id"
+    t.bigint "friend_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["friend_id"], name: "index_friend_requests_on_friend_id"
+    t.index ["user_id"], name: "index_friend_requests_on_user_id"
   end
 
   create_table "friendships", force: :cascade do |t|
@@ -32,7 +34,7 @@ ActiveRecord::Schema.define(version: 2019_10_02_075859) do
   create_table "messages", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "room_id"
-    t.string "content"
+    t.text "content", null: false
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -40,9 +42,19 @@ ActiveRecord::Schema.define(version: 2019_10_02_075859) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "permissions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "room_id"
+    t.string "role", default: "0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_permissions_on_room_id"
+    t.index ["user_id"], name: "index_permissions_on_user_id"
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.string "description"
+    t.text "description"
     t.string "avatar"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -51,7 +63,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_075859) do
   create_table "user_rooms", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "room_id"
-    t.integer "admin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["room_id"], name: "index_user_rooms_on_room_id"
@@ -59,16 +70,19 @@ ActiveRecord::Schema.define(version: 2019_10_02_075859) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "password"
+    t.string "name", null: false
+    t.string "email", null: false
     t.string "avatar"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "friend_requests", "users"
+  add_foreign_key "friend_requests", "users", column: "friend_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "permissions", "rooms"
+  add_foreign_key "permissions", "users"
   add_foreign_key "user_rooms", "rooms"
   add_foreign_key "user_rooms", "users"
 end

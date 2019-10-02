@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :friendships, dependent: :destroy
   has_many :friends, through: :friendships
   has_many :messages
+  has_many :permissions
 
   validates :email, uniqueness: true
   validates :name, presence: true

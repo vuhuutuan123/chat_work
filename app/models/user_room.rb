@@ -2,5 +2,5 @@ class UserRoom < ApplicationRecord
   belongs_to :user
   belongs_to :room
 
-  enum role: {admin: 1, member: 0}
+  validates :user_id, uniqueness: { scope: :room_id }
 end

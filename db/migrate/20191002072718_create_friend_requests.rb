@@ -1,8 +1,8 @@
 class CreateFriendRequests < ActiveRecord::Migration[5.2]
   def change
     create_table :friend_requests do |t|
-      t.integer :sender_id
-      t.integer :receiver_id
+      t.references :user, foreign_key: true
+      t.references :friend, foreign_key: { to_table: 'users' }
 
       t.timestamps
     end
