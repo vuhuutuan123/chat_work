@@ -9,6 +9,5 @@ class User < ApplicationRecord
   has_many :permissions
 
   validates :email, uniqueness: true
-  # validates :name, presence: true
-
+  validates :name, presence: true
 end
