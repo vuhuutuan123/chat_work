@@ -16,7 +16,8 @@
               <li class="globalNavItem"><a href="#">Download</a></li>
               <li class="globalNavItem"><a href="#">FAQ</a></li>
               <li class="globalNavItem">
-                <a href="/" class="signInBtn">Sign In</a>
+                <a href="/login" class="signInBtn">Sign In</a>
+                <a class="signInBtn" @click="logoutAction">Sign Out</a>
               </li>
             </ul>
           </div>
@@ -24,6 +25,9 @@
         <div class="headerContent">
           <div class="contentText">
             <h1 class="catchCopy">Group chat for global teams.</h1>
+            <p class="tagLine">
+              {{ this.$store.state }}
+            </p>
             <p class="tagLine">
               Teamwork without the drama. It’s a beautiful thing.
             </p>
@@ -62,10 +66,13 @@
 
 <script>
 import Footer from "@/components/Footer";
-
+import { mapActions } from 'vuex'
 export default {
   components: {
     appFooter: Footer
+  },
+  methods: {
+    ...mapActions(['logoutAction']),
   }
 };
 </script>
